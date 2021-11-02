@@ -16,3 +16,6 @@ Known issues:
 - Als Home Assistant start, is er nog geen info van de sensor en staat deze op 'Unknown'. 
 - Configuratie gaat in de sensor.py file, niet via de Home Assistant configuratie.
 - Alleen getest met mijn eigen ondergrondse restafval-container.
+
+![8phdfyyapy1SkXOtbgnfnTSs](https://user-images.githubusercontent.com/4752390/139950272-45f3ae5d-b96e-42c9-b5e7-8c2867425412.png)
+
