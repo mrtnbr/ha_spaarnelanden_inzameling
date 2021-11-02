@@ -1,0 +1,13 @@
+{
+  "domain": "spaarnelanden_inzameling",
+  "name": "Spaarnelanden Inzameling Integration",
+  "config_flow": false,
+  "documentation": "not yet",
+  "requirements": ["gazpacho==1.1"],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": ["@mrtnbr"],
+  "version": "0.0.1"
+}
