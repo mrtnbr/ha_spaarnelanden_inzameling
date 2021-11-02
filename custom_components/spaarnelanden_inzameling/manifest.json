@@ -2,7 +2,7 @@
   "domain": "spaarnelanden_inzameling",
   "name": "Spaarnelanden Inzameling Integration",
   "config_flow": false,
-  "documentation": "not yet",
+  "documentation": "https://github.com/mrtnbr/ha_spaarnelanden_inzameling/blob/main/README.md",
   "requirements": ["gazpacho==1.1"],
   "ssdp": [],
   "zeroconf": [],
