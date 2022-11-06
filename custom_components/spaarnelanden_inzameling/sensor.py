@@ -140,7 +140,7 @@ class ContainerSensor(Entity):
         return self._icon
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         return {
             'filling_degree_status': self.containerdata['filling_degree_status'],
