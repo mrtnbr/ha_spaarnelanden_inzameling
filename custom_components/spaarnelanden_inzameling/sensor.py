@@ -58,7 +58,7 @@ def get_containerdata():
         containers_json_decoded = \
             json.JSONDecoder().decode(
                 re.search(
-                    SEARCH_PATTERN, soup.find(SEARCH_TAG)[8].text
+                    SEARCH_PATTERN, soup.find(SEARCH_TAG)[11].text
                 ).group(1))
 
         for i in containers_json_decoded:
