@@ -71,12 +71,7 @@ def get_containerdata():
                 containers_dictionary['is_out_of_use'] = (i['bIsOutOfUse'])
                 containers_dictionary['is_skipped'] = (i['bIsSkipped'])
                 containers_dictionary['is_emptied_today'] = (i['bIsEmptiedToday'])
-                containers_dictionary['date_last_emptied'] = \
-                    datetime.fromtimestamp(
-                        int(
-                            re.findall(r'\d+', (i['dtDateLastEmptied']))[0]
-                        ) / 1000
-                    )
+                containers_dictionary['date_last_emptied'] = datetime.strptime(i['sDateLastEmptied'], '%d-%m-%Y')
                 containers_dictionary['container_product_id'] = (i['iContainerProductId'])
                 containers_dictionary['product_name'] = (i['sProductName'])
                 containers_dictionary['container_kind_name'] = (i['sContainerKindName'])
