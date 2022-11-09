@@ -1,13 +1,13 @@
 {
   "domain": "spaarnelanden_inzameling",
   "name": "Spaarnelanden Inzameling Integration",
-  "config_flow": false,
+  "integration_type": "entity",
   "documentation": "https://github.com/mrtnbr/ha_spaarnelanden_inzameling/blob/main/README.md",
-  "requirements": ["gazpacho==1.1"],
-  "ssdp": [],
-  "zeroconf": [],
-  "homekit": {},
+  "issue_tracker": "https://github.com/mrtnbr/ha_spaarnelanden_inzameling/issues",
   "dependencies": [],
   "codeowners": ["@mrtnbr"],
-  "version": "0.0.3"
+  "requirements": ["gazpacho==1.1"],
+  "iot_class": "cloud_polling",
+  "config_flow": false,
+  "version": "0.0.5"
 }
