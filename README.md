@@ -3,7 +3,7 @@ Een sensor component voor het ophalen (scrapen) van informatie van https://inzam
 Handleiding:
 - Voeg toe aan Home Assistant, via HACS of handmatig
 - Zoek je container nummer op op https://inzameling.spaarnelanden.nl/ en vul deze in tussen de quotes achter CONTAINER_NUMBER in sensor.py
-- Zet `- platform: spaarnelanden_inzameling` in de Home Assistan sensor.yaml file.
+- Zet `- platform: spaarnelanden_inzameling` in de Home Assistant sensor.yaml file.
 
 Opmerkingen:
 - Dit is het eerste en enige wat ik ooit in elkaar heb geklust in Python. *Alle verbeteringen zijn welkom, deel ze hier met mij!*
