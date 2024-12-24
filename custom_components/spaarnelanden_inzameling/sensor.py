@@ -16,14 +16,13 @@ DOMAIN = "spaarnelanden_inzameling"
 
 DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S:%f'
 
-CONTAINER_NUMBER = ''  # 'Nummer' van container op https://inzameling.spaarnelanden.nl/
+# CONTAINER_NUMBER = '101609'  # 'Nummer' van container op https://inzameling.spaarnelanden.nl/
 
 SOURCE_URL = 'https://inzameling.spaarnelanden.nl/'
 SEARCH_TAG = 'script'
 SEARCH_PATTERN = 'var oContainerModel =(.*])'
 
 TIME_BETWEEN_UPDATES = timedelta(minutes=10)
-SENSOR_NAME = 'Spaarnelanden Inzameling (Container ' + CONTAINER_NUMBER + ')'
 
 TRASH_TYPES = {
     'Papier': ['Papier', 'mdi:recycle'],
@@ -43,7 +42,7 @@ FILLING_DEGREE_STATUSES = {
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_containerdata():
+def get_containerdata(container_number):
     try:
         containers_dictionary = {}
 
@@ -62,7 +61,7 @@ def get_containerdata():
                 ).group(1))
 
         for i in containers_json_decoded:
-            if i['sRegistrationNumber'] == CONTAINER_NUMBER:
+            if i['sRegistrationNumber'] == container_number:
                 containers_dictionary['filling_degree_status'] = FILLING_DEGREE_STATUSES[(i['iFillingDegreeStatus'])]
                 containers_dictionary['filling_degree'] = (i['dFillingDegree'])
                 containers_dictionary['latitude'] = (i['dLatitude'])
@@ -90,13 +89,17 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     """Set up the sensor platform."""
     _LOGGER.debug('Setup sensor')
 
-    add_entities([ContainerSensor()])
+    container = ContainerSensor()
+    container.container_number = config.get('container_number', 0)
+
+    add_entities([container])
 
 
 class ContainerSensor(Entity):
     def __init__(self):
         """Initialize the sensor."""
         self._state = None
+        self.container_number = 0
 
         self.containerdata = {
             'filling_degree_status': None,
@@ -117,7 +120,7 @@ class ContainerSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return SENSOR_NAME
+        return 'Spaarnelanden Inzameling (Container ' + self.container_number + ')'
 
     @property
     def state(self):
@@ -157,7 +160,7 @@ class ContainerSensor(Entity):
         """Fetch new state data for the sensor."""
         _LOGGER.debug('Updating containerdata started: ' + datetime.today().strftime(DATETIME_FORMAT))
 
-        self.containerdata = get_containerdata()
+        self.containerdata = get_containerdata(self.container_number)
         self._state = self.containerdata['filling_degree']
         self._icon = TRASH_TYPES[self.containerdata['product_name']][1]
 
