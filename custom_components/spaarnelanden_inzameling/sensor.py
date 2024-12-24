@@ -32,9 +32,10 @@ TRASH_TYPES = {
 }
 
 FILLING_DEGREE_STATUSES = {
-    1: 'Niet ingepland vandaag',
+    0: 'Niet ingepland vandaag',
+    1: 'Ingepland',
     2: 'Onbekend (2)',
-    3: 'Ingepland'
+    3: 'Niet ingepland vandaag',
 }
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,7 +61,7 @@ def get_containerdata(container_number):
 
         for i in containers_json_decoded:
             if i['sRegistrationNumber'] == str(container_number):
-                containers_dictionary['filling_degree_status'] = FILLING_DEGREE_STATUSES[(i['iFillingDegreeStatus'])]
+                containers_dictionary['filling_degree_status'] = FILLING_DEGREE_STATUSES[(i['oPlanningDetail']['iPlanningActionStatus'])]
                 containers_dictionary['filling_degree'] = (i['dFillingDegree'])
                 containers_dictionary['latitude'] = (i['dLatitude'])
                 containers_dictionary['longitude'] = (i['dLongitude'])
