@@ -16,8 +16,6 @@ DOMAIN = "spaarnelanden_inzameling"
 
 DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S:%f'
 
-# CONTAINER_NUMBER = '101609'  # 'Nummer' van container op https://inzameling.spaarnelanden.nl/
-
 SOURCE_URL = 'https://inzameling.spaarnelanden.nl/'
 SEARCH_TAG = 'script'
 SEARCH_PATTERN = 'var oContainerModel =(.*])'
@@ -61,7 +59,7 @@ def get_containerdata(container_number):
                 ).group(1))
 
         for i in containers_json_decoded:
-            if i['sRegistrationNumber'] == container_number:
+            if i['sRegistrationNumber'] == str(container_number):
                 containers_dictionary['filling_degree_status'] = FILLING_DEGREE_STATUSES[(i['iFillingDegreeStatus'])]
                 containers_dictionary['filling_degree'] = (i['dFillingDegree'])
                 containers_dictionary['latitude'] = (i['dLatitude'])
@@ -88,18 +86,21 @@ def get_containerdata(container_number):
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Set up the sensor platform."""
     _LOGGER.debug('Setup sensor')
+    containers = []
 
-    container = ContainerSensor()
-    container.container_number = config.get('container_number', 0)
+    conf_containers = config.get('containers')
+    for i in range(len(conf_containers)):
+        containers.append(ContainerSensor(conf_containers[i]))
 
-    add_entities([container])
+    add_entities(containers)
 
 
 class ContainerSensor(Entity):
-    def __init__(self):
+    def __init__(self, container_number):
         """Initialize the sensor."""
         self._state = None
-        self.container_number = 0
+        self.container_number = container_number
+        self.unique_id = 'sensor.spaarnelanden_inzameling_container_' + str(self.container_number)
 
         self.containerdata = {
             'filling_degree_status': None,
@@ -120,7 +121,7 @@ class ContainerSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return 'Spaarnelanden Inzameling (Container ' + self.container_number + ')'
+        return 'Spaarnelanden Inzameling (Container ' + str(self.container_number) + ')'
 
     @property
     def state(self):
