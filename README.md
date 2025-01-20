@@ -12,7 +12,7 @@ Handleiding:
 
 Opmerkingen:
 - Dit is het eerste ~en enige~ wat ik ooit in elkaar heb geklust in Python. *Alle verbeteringen zijn welkom, deel ze hier met mij (en de rest van de wereld :))!*
-- De webpagina die wordt opgehaald is "groot" (3,4 MB), doe het niet te vaak. De variabele TIME_BETWEEN_UPDATES (in sensor.py) bewaakt dit, en staat op 10 minuten.
+- De webpagina die wordt opgehaald is "groot" (3,4 MB), doe het niet te vaak. De variabele TIME_BETWEEN_UPDATES (in sensor.py) bewaakt dit en staat op 10 minuten.
 - Voor zover ik heb kunnen ontdekken, werkt Spaarnelanden de gegevens voor de container bij op een paar momenten:
   - Container is geleegd
   - Container is 100% vol
