@@ -16,14 +16,11 @@ DOMAIN = "spaarnelanden_inzameling"
 
 DATETIME_FORMAT = '%d-%m-%Y %H:%M:%S:%f'
 
-CONTAINER_NUMBER = ''  # 'Nummer' van container op https://inzameling.spaarnelanden.nl/
-
 SOURCE_URL = 'https://inzameling.spaarnelanden.nl/'
 SEARCH_TAG = 'script'
 SEARCH_PATTERN = 'var oContainerModel =(.*])'
 
 TIME_BETWEEN_UPDATES = timedelta(minutes=10)
-SENSOR_NAME = 'Spaarnelanden Inzameling (Container ' + CONTAINER_NUMBER + ')'
 
 TRASH_TYPES = {
     'Papier': ['Papier', 'mdi:recycle'],
@@ -35,15 +32,16 @@ TRASH_TYPES = {
 }
 
 FILLING_DEGREE_STATUSES = {
-    1: 'Niet ingepland vandaag',
-    2: 'Onbekend (2)',
-    3: 'Ingepland'
+    0: 'Container wordt geleegd',
+    1: 'Geleegd',
+    2: 'Niet bereikbaar',
+    3: 'Niet ingepland vandaag',
 }
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_containerdata():
+def get_containerdata(container_number):
     try:
         containers_dictionary = {}
 
@@ -62,8 +60,8 @@ def get_containerdata():
                 ).group(1))
 
         for i in containers_json_decoded:
-            if i['sRegistrationNumber'] == CONTAINER_NUMBER:
-                containers_dictionary['filling_degree_status'] = FILLING_DEGREE_STATUSES[(i['iFillingDegreeStatus'])]
+            if i['sRegistrationNumber'] == str(container_number):
+                containers_dictionary['filling_degree_status'] = i['oPlanningDetail']['iPlanningActionStatus'] > 0 and FILLING_DEGREE_STATUSES[(i['oPlanningDetail']['iPlanningActionStatus'])] or i['oPlanningDetail']['iInitialStatus'] == 3 and FILLING_DEGREE_STATUSES[(i['oPlanningDetail']['iPlanningActionStatus'])] or FILLING_DEGREE_STATUSES[(3)]
                 containers_dictionary['filling_degree'] = (i['dFillingDegree'])
                 containers_dictionary['latitude'] = (i['dLatitude'])
                 containers_dictionary['longitude'] = (i['dLongitude'])
@@ -89,14 +87,21 @@ def get_containerdata():
 def setup_platform(hass, config, add_entities, discovery_info=None):
     """Set up the sensor platform."""
     _LOGGER.debug('Setup sensor')
+    containers = []
 
-    add_entities([ContainerSensor()])
+    conf_containers = config.get('containers')
+    for i in range(len(conf_containers)):
+        containers.append(ContainerSensor(conf_containers[i]))
+
+    add_entities(containers)
 
 
 class ContainerSensor(Entity):
-    def __init__(self):
+    def __init__(self, container_number):
         """Initialize the sensor."""
         self._state = None
+        self.container_number = container_number
+        self.unique_id = 'sensor.spaarnelanden_inzameling_container_' + str(self.container_number)
 
         self.containerdata = {
             'filling_degree_status': None,
@@ -117,7 +122,7 @@ class ContainerSensor(Entity):
     @property
     def name(self):
         """Return the name of the sensor."""
-        return SENSOR_NAME
+        return 'Spaarnelanden Inzameling (Container ' + str(self.container_number) + ')'
 
     @property
     def state(self):
@@ -157,7 +162,7 @@ class ContainerSensor(Entity):
         """Fetch new state data for the sensor."""
         _LOGGER.debug('Updating containerdata started: ' + datetime.today().strftime(DATETIME_FORMAT))
 
-        self.containerdata = get_containerdata()
+        self.containerdata = get_containerdata(self.container_number)
         self._state = self.containerdata['filling_degree']
         self._icon = TRASH_TYPES[self.containerdata['product_name']][1]
 
