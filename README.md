@@ -1,4 +1,4 @@
-Een sensor component voor het ophalen (scrapen) van informatie van https://inzameling.spaarnelanden.nl/, voor Home Assistant.
+Een sensor component voor het ophalen (scrapen) van informatie van https://inzameling.spaarnelanden.nl/ voor Home Assistant.
 
 Handleiding:
 - Voeg toe aan Home Assistant, via HACS of handmatig
