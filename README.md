@@ -19,4 +19,4 @@ Opmerkingen:
   - De tijd is 6:00
 
 Known issues:
-- Als Home Assistant start, is er nog geen info van de sensor en staat deze op 'Unknown'.
+- Als Home Assistant opstart, is er nog geen info van de sensor en staat deze op 'Unknown'.
